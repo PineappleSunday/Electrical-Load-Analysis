@@ -1,0 +1,180 @@
+{
+  "name": "28 V Avionics Power Budget",
+  "duration_s": 40,
+  "dt_s": 0.1,
+  "mission_enabled": true,
+  "mission_phases": [
+    {
+      "name": "Startup",
+      "duration_s": 5,
+      "states": {
+        "L1": "off",
+        "L2": "off"
+      }
+    },
+    {
+      "name": "Takeoff",
+      "duration_s": 8,
+      "states": {
+        "L1": "max",
+        "L2": "max"
+      }
+    },
+    {
+      "name": "Cruise",
+      "duration_s": 20,
+      "states": {
+        "L1": "duty",
+        "L2": "min"
+      }
+    },
+    {
+      "name": "Landing",
+      "duration_s": 7,
+      "states": {
+        "L1": "max",
+        "L2": "max"
+      }
+    }
+  ],
+  "buses": [
+    {
+      "id": "BUS28",
+      "name": "Primary 28 V",
+      "voltage_v": 28.0,
+      "source_limit_a": 12.0
+    },
+    {
+      "id": "BUS12",
+      "name": "12 V Regulated",
+      "voltage_v": 12.0,
+      "source_limit_a": 0
+    },
+    {
+      "id": "BUS5",
+      "name": "5 V Regulated",
+      "voltage_v": 5.0,
+      "source_limit_a": 0
+    },
+    {
+      "id": "BUS3V3",
+      "name": "3.3 V Digital",
+      "voltage_v": 3.3,
+      "source_limit_a": 0
+    }
+  ],
+  "converters": [
+    {
+      "id": "DCDC1",
+      "name": "28-to-12",
+      "input_bus": "BUS28",
+      "output_bus": "BUS12",
+      "efficiency": 0.91,
+      "max_output_a": 8.0,
+      "quiescent_input_a": 0.018
+    },
+    {
+      "id": "DCDC2",
+      "name": "12-to-5",
+      "input_bus": "BUS12",
+      "output_bus": "BUS5",
+      "efficiency": 0.9,
+      "max_output_a": 6.0,
+      "quiescent_input_a": 0.01
+    },
+    {
+      "id": "DCDC3",
+      "name": "5-to-3.3",
+      "input_bus": "BUS5",
+      "output_bus": "BUS3V3",
+      "efficiency": 0.88,
+      "max_output_a": 3.0,
+      "quiescent_input_a": 0.006
+    }
+  ],
+  "loads": [
+    {
+      "id": "L1",
+      "name": "Radio",
+      "bus": "BUS28",
+      "min_a": 0.2,
+      "nom_a": 0.55,
+      "max_a": 1.8,
+      "profile": [
+        {
+          "time_s": 0,
+          "current_a": 0.3
+        },
+        {
+          "time_s": 10,
+          "current_a": 1.7
+        },
+        {
+          "time_s": 13,
+          "current_a": 0.3
+        },
+        {
+          "time_s": 35,
+          "current_a": 1.7
+        },
+        {
+          "time_s": 39,
+          "current_a": 0.3
+        }
+      ],
+      "load_mode": "duty",
+      "duty_pct": 20,
+      "period_s": 5,
+      "on_a": 1.7,
+      "off_a": 0.3
+    },
+    {
+      "id": "L2",
+      "name": "Actuator",
+      "bus": "BUS12",
+      "min_a": 0.0,
+      "nom_a": 0.75,
+      "max_a": 3.0,
+      "profile": [
+        {
+          "time_s": 0,
+          "current_a": 0
+        },
+        {
+          "time_s": 18,
+          "current_a": 2.8
+        },
+        {
+          "time_s": 23,
+          "current_a": 0.2
+        },
+        {
+          "time_s": 45,
+          "current_a": 2.8
+        },
+        {
+          "time_s": 50,
+          "current_a": 0.2
+        }
+      ]
+    },
+    {
+      "id": "L3",
+      "name": "SBC",
+      "bus": "BUS5",
+      "min_a": 0.6,
+      "nom_a": 1.3,
+      "max_a": 2.0,
+      "profile": []
+    },
+    {
+      "id": "L4",
+      "name": "MCU and Sensors",
+      "bus": "BUS3V3",
+      "min_a": 0.12,
+      "nom_a": 0.26,
+      "max_a": 0.48,
+      "profile": []
+    }
+  ]
+}
